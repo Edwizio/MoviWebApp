@@ -18,3 +18,10 @@ data_manager = DataManager() # Create an object of your DataManager class
 def home():
     return "Welcome to MoviWeb App!"
 
+# Creating the database
+if __name__ == '__main__':
+  with app.app_context():
+    db.create_all()
+
+  app.run()
+

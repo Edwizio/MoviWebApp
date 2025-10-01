@@ -55,7 +55,12 @@ def update_movie(movie_id, new_title):
     data_manager.update_movie(movie_id, new_title)
 
 
+# Creating a route and method to remove a specific movie from a user’s favorite movie list
+@app.route('/users/<int:user_id>/movies/<int:movie_id>/delete', methods=['POST'])
+def remove_movie(movie_id):
+    """This method removes a movie from a user's list"""
 
+    data_manager.delete_movie(movie_id)
 
 
 # Creating the database

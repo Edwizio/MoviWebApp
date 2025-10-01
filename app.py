@@ -12,3 +12,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)  # Link the database and the app. This is the reason you need to import db from models
 
 data_manager = DataManager() # Create an object of your DataManager class
+
+# Route created for testing
+@app.route('/')
+def home():
+    return "Welcome to MoviWeb App!"
+

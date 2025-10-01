@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from data_manager import DataManager
 from models import db, Movie
 import os
@@ -34,6 +34,15 @@ def display_movies(user_id):
     """This function displays the favourite movies of the user based on ID"""
     data_manager.get_movies(user_id)
 
+
+# Creating a route and method to add a new movie to the user's list
+@app.route('/users/<int:user_id>/movies', methods=['POST'])
+def add_movie(user_id):
+    """This method adds a movie to a user's list based on ID"""
+    # Getting the Foreign Key user_id from the webpage
+    movie = request.form.get('movie')
+
+    data_manager.add_movie(movie)
 
 
 # Creating the database

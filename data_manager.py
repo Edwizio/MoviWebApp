@@ -25,6 +25,9 @@ class DataManager():
         return movies
 
     def add_movie(self, movie):
+        """This method takes a movie a parameter, retrieves the relevant info from OMDBAPI and
+        adds to a user's list of favourites"""
+
         api_url = f"https://www.omdbapi.com/?t={movie}&apikey={API_KEY}"
         response = requests.get(api_url)
 
@@ -37,7 +40,9 @@ class DataManager():
                 name = movie_data['Title'],
                 director = movie_data['Director'],
                 year = int(movie_data['Year']),
-                poster_url = movie_data['Poster']
+                poster_url = movie_data['Poster'],
+                # Getting the Foreign Key user_id from the webpage
+                #user_id = request.form.get('user_id')
 
             )
 

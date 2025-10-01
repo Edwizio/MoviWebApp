@@ -55,3 +55,13 @@ class DataManager():
         db.session.commit()
 
 
+    def delete_movie(self, movie_id):
+        """This function deletes a movie based on it's ID"""
+
+        # Fetching the correct Movie Object
+        movie = Movie.query.get(movie_id)
+
+        # Deleting the movie from the database
+        db.session.delete(movie)
+        db.session.commit()
+

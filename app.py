@@ -39,10 +39,23 @@ def display_movies(user_id):
 @app.route('/users/<int:user_id>/movies', methods=['POST'])
 def add_movie(user_id):
     """This method adds a movie to a user's list based on ID"""
-    # Getting the Foreign Key user_id from the webpage
+    # Getting the title from the webpage
     movie = request.form.get('movie')
 
     data_manager.add_movie(movie)
+
+
+# Creating a route and method to modify the title of a specific movie in a user’s list
+@app.route('/users/<int:user_id>/movies/<int:movie_id>/update', methods=['POST'])
+def update_movie(movie_id, new_title):
+    """This method updates the title of a movie based on it's ID"""
+    # Getting the new title from the webpage
+    new_title = request.form.get('new_title')
+
+    data_manager.update_movie(movie_id, new_title)
+
+
+
 
 
 # Creating the database

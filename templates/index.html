@@ -2,9 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Users</title>
 </head>
 <body>
+    {% extends "base.html" %}
+    {% block content %}
+    <!-- List of users -->
+    <h1>Users</h1>
+        <ul class="user-list">
+        {% for user in users %}
+         <li class="user-entry">
+            <a href="{{ url_for('get_movies', user_id=user.id) }}" class="btn">{{ user.name }}</a>
+         </li>
+        {% endfor %}
+        </ul>
+    <!-- Add new users -->
+    <form action="{{ url_for('create_user') }}" method="post">
+        <label for="name">New User:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <button type="submit">Add User</button>
+    </form>
+
+
+    {% endblock %}
 
 </body>
 </html>

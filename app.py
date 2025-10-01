@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, render_template
 from data_manager import DataManager
 from models import db, Movie
 import os
@@ -15,17 +15,18 @@ data_manager = DataManager() # Create an object of your DataManager class
 
 # Creating Route and method to list users
 @app.route('/')
-def list_users():
+def index():
     """This functions displays the list of users and a form to add new user"""
     users = data_manager.get_users()
-    return str(users)  # Temporarily returning users as a string
+    return render_template('index.html', users=users)
 
 
 # Creating route and method for adding new user
 @app.route('/users',  methods=['POST'])
-def add_user(name):
+def create_user(name):
     """This function add a new user to the database"""
     data_manager.create_user(name)
+    return render_template('index.html', name=name)
 
 
 # Creating route and method to display user's list of favourite movies

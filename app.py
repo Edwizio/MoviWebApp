@@ -13,15 +13,27 @@ db.init_app(app)  # Link the database and the app. This is the reason you need t
 
 data_manager = DataManager() # Create an object of your DataManager class
 
-# Route created for testing
+# Creating Route and method to list users
 @app.route('/')
-def home():
-    return "Welcome to MoviWeb App!"
+def list_users():
+    """This functions displays the list of users and a form to add new user"""
+    users = data_manager.get_users()
+    return str(users)  # Temporarily returning users as a string
+
+
+# Creating route and method for adding new user
+@app.route('/users',  methods=['POST'])
+def add_user(name):
+    """This function add a new user to the database"""
+    data_manager.create_user(name)
+
+
+
 
 # Creating the database
 if __name__ == '__main__':
-  with app.app_context():
-    db.create_all()
+    """  with app.app_context():
+    db.create_all()"""
 
-  app.run()
+    app.run()
 

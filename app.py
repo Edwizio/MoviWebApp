@@ -28,6 +28,12 @@ def add_user(name):
     data_manager.create_user(name)
 
 
+# Creating route and method to display user's list of favourite movies
+@app.route('/users/<int:user_id>/movies', methods=['GET'])
+def display_movies(user_id):
+    """This function displays the favourite movies of the user based on ID"""
+    data_manager.get_movies(user_id)
+
 
 
 # Creating the database

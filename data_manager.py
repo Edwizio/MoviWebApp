@@ -27,3 +27,31 @@ class DataManager():
     def add_movie(self, movie):
         api_url = f"https://www.omdbapi.com/?t={movie}&apikey={API_KEY}"
         response = requests.get(api_url)
+
+        # Error Handling if website isn't accessible
+        if response.status_code == requests.codes.ok:
+            movie_data = response.json()
+
+            # Creating new Movie object
+            new_movie = Movie(
+                name = movie_data['Title'],
+                director = movie_data['Director'],
+                year = int(movie_data['Year']),
+                poster_url = movie_data['Poster']
+
+            )
+
+            db.session.add(new_movie)
+            db.session.commit()
+
+    def update_movie(self, movie_id, new_title):
+        """This function updates the movie title using the movie ID"""
+
+        # Fetching the correct Movie Object
+        movie = Movie.query.get(movie_id)
+
+        # Updating the title
+        movie.name = new_title
+        db.session.commit()
+
+

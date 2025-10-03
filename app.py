@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, url_for, redirect
 from data_manager import DataManager
 from models import db, Movie
 import os
@@ -26,14 +26,15 @@ def index():
 def create_user(name):
     """This function add a new user to the database"""
     data_manager.create_user(name)
-    return render_template('index.html', name=name)
+    return redirect(url_for('index'))
 
 
 # Creating route and method to display user's list of favourite movies
 @app.route('/users/<int:user_id>/movies', methods=['GET'])
 def display_movies(user_id):
     """This function displays the favourite movies of the user based on ID"""
-    data_manager.get_movies(user_id)
+    movies = data_manager.get_movies(user_id)
+    return render_template('user.html', movies)
 
 
 # Creating a route and method to add a new movie to the user's list
@@ -42,8 +43,8 @@ def add_movie(user_id):
     """This method adds a movie to a user's list based on ID"""
     # Getting the title from the webpage
     movie = request.form.get('movie')
-
     data_manager.add_movie(movie)
+    return render_template('user.html')
 
 
 # Creating a route and method to modify the title of a specific movie in a user’s list
@@ -52,16 +53,16 @@ def update_movie(movie_id, new_title):
     """This method updates the title of a movie based on it's ID"""
     # Getting the new title from the webpage
     new_title = request.form.get('new_title')
-
     data_manager.update_movie(movie_id, new_title)
+    return render_template('user.html')
 
 
 # Creating a route and method to remove a specific movie from a user’s favorite movie list
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/delete', methods=['POST'])
 def remove_movie(movie_id):
     """This method removes a movie from a user's list"""
-
     data_manager.delete_movie(movie_id)
+    return render_template('user.html')
 
 
 # Creating the database

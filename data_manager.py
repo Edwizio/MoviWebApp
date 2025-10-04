@@ -1,3 +1,5 @@
+from flask import request
+
 from models import db, User, Movie
 import requests
 import os
@@ -13,6 +15,7 @@ class DataManager():
         new_user = User(name=name)
         db.session.add(new_user)
         db.session.commit()
+        return new_user
 
     def get_users(self):
         """This function returns a list of the existing users"""
@@ -21,10 +24,12 @@ class DataManager():
 
     def get_movies(self, user_id):
         """This function returns a list of all movies of a specific user"""
-        movies = Movie.query.join(User).order_by(user_id).all()
-        return movies
+        user = User.query.get(user_id)
+        if not user:
+            return [] # error handling
+        return user.movies
 
-    def add_movie(self, movie):
+    def add_movie(self, movie, user_id):
         """This method takes a movie a parameter, retrieves the relevant info from OMDBAPI and
         adds to a user's list of favourites"""
 
@@ -42,12 +47,13 @@ class DataManager():
                 year = int(movie_data['Year']),
                 poster_url = movie_data['Poster'],
                 # Getting the Foreign Key user_id from the webpage
-                #user_id = request.form.get('user_id')
-
+                user_id = user_id
             )
 
             db.session.add(new_movie)
             db.session.commit()
+            return new_movie
+        return None
 
     def update_movie(self, movie_id, new_title):
         """This function updates the movie title using the movie ID"""
@@ -58,6 +64,7 @@ class DataManager():
         # Updating the title
         movie.name = new_title
         db.session.commit()
+        return movie
 
 
     def delete_movie(self, movie_id):
@@ -69,4 +76,5 @@ class DataManager():
         # Deleting the movie from the database
         db.session.delete(movie)
         db.session.commit()
+        return movie
 

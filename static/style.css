@@ -1,0 +1,13 @@
+header{
+    background-color: blue;
+    padding: 50px 100px;
+    display: flex;
+    align-content: center;
+}
+
+footer{
+    background-color: blue;
+    padding: 50px 100px;
+    display: flex;
+    align-content: center;
+}

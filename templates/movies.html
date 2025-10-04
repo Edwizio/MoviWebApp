@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Movies</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
+    <header>Jewels of Cinema</header>
      <form action="{{ url_for('display_movies', user_id=user.id) }}" method="GET">
      <h1> Movies for {{user.name}}</h1>
      <!-- Movie Section -->
@@ -19,12 +20,12 @@
         <img src="{{ movie.poster_url }}" alt="Cover for {{ movie.name }}">
 
         <!-- For deletion -->
-        <form action="{{ url_for('remove_movie', movie_id=movie.id) }}" method="POST">
+        <form action="{{ url_for('remove_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
         <button type="submit">Delete</button>
         </form>
         <!-- For Update -->
-        <form action="{{ url_for('update_movie', movie_id=movie.id) }}" method="POST">
-            <input type="text" name="new_title" placeholder="New Title">
+        <form action="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
+            <input type="text" name="new_title" >
             <button type="submit">Update</button>
         </form>
 

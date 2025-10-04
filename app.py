@@ -64,22 +64,36 @@ def add_movie(user_id):
 
 # Creating a route and method to modify the title of a specific movie in a user’s list
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/update', methods=['POST'])
-def update_movie(movie_id):
+def update_movie(movie_id, user_id):
     """This method updates the title of a movie based on it's ID"""
 
     # Getting the new title from the webpage
     new_title = request.form.get('new_title')
     data_manager.update_movie(movie_id, new_title)
 
-    return render_template('movies.html')
+    # Extracting the user object to be used in jinja statements on webpage
+    user = User.query.get(user_id)
+    # and the list of the user's movies to be passed on as arguments to return statement
+    movies = user.movies
+
+    flash("Movie Title updated in the database", "success")
+    return redirect(url_for('display_movies', user_id=user.id))
 
 
 # Creating a route and method to remove a specific movie from a user’s favorite movie list
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/delete', methods=['POST'])
-def remove_movie(movie_id):
+def remove_movie(movie_id, user_id):
     """This method removes a movie from a user's list"""
     data_manager.delete_movie(movie_id)
-    return render_template('movies.html')
+
+    # Extracting the user object to be used in jinja statements on webpage
+    user = User.query.get(user_id)
+    # and the list of the user's movies to be passed on as arguments to return statement
+    movies = user.movies
+
+    flash("Movie Deleted from the database", "success")
+    return redirect(url_for('display_movies', user_id=user.id))
+
 
 
 # Creating the database

@@ -59,6 +59,7 @@ class DataManager():
                     year=year,
                     poster_url=poster_url,
                     user_id=user_id
+
                 )
 
             db.session.add(new_movie)

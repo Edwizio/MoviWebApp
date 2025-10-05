@@ -188,3 +188,28 @@ p {
     background-color: black;
     color: red;
 }
+
+/* Base button style */
+button {
+  background-color: #6A0DAD;   /* deep purple */
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;   /* smooth hover animation */
+}
+
+/* Hover effect */
+button:hover {
+  background-color: #9b30ff;   /* lighter purple on hover */
+  transform: translateY(-2px); /* subtle lift effect */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* shadow on hover */
+}
+
+/* Optional: pressed/click effect */
+button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}

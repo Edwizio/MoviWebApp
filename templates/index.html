@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Users</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
 </head>
 <body>
+    <div class="card-container">
     {% extends "base.html" %}
     {% block content %}
     <!-- List of users -->
@@ -14,14 +18,15 @@
 
         <ul class="user-list">
         {% for user in users %}
-         <li class="user-entry">
+         <li class="user-card">
             <a href="{{ url_for('display_users') }}" class="btn"></a>
             <span>{{ user.name }}</span>
             <!-- Button that links to the movies page for this user -->
-            <form action="{{ url_for('display_movies', user_id=user.id) }}" method="get">
+            <div class="display-button">
+             <form action="{{ url_for('display_movies', user_id=user.id) }}" method="get">
                 <button type="submit">View Movies</button>
             </form>
-
+            </div>
          </li>
         {% endfor %}
         </ul>
@@ -47,6 +52,8 @@
     {% endif %}
     {% endwith %}
     {% endblock %}
-<footer>© 2025 MovieApp. All rights reserved.</footer>
+
+    <footer>© 2025 MovieApp. All rights reserved.</footer>
+    </div>
 </body>
 </html>

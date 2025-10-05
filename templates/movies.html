@@ -2,36 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Movies</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+
 </head>
 <body>
     <header>Jewels of Cinema</header>
-     <form action="{{ url_for('display_movies', user_id=user.id) }}" method="GET">
-     <h1> Movies for {{user.name}}</h1>
+    <div class="list-movies-title">
+     <a href="{{ url_for('display_users') }}">⬅ Back to Users</a>
+
+    <form action="{{ url_for('display_movies', user_id=user.id) }}" method="GET">
+     <div class="list-movies-title">
+        <h1> Movies for {{user.name}}</h1>
      <!-- Movie Section -->
      {% if movies %}
         {% for movie in movies %}
+        <ol class="movie-grid">
+            <li>
+            <div class="movie">
+            <h3 class="movie-title">{{ movie.name }}</h3>
+            <p class="movie-director">Director: {{ movie.director or 'N/A' }}</p>
+            <p class="movie-year">Year: {{ movie.year or 'N/A' }}</p>
 
-        <h3>{{ movie.name }}</h3>
-        <p>Director: {{ movie.director or 'N/A' }}</p>
-        <p>Year: {{ movie.year or 'N/A' }}</p>
+            <img class="movie-poster" src="{{ movie.poster_url }}" alt="Cover for {{ movie.name }}">
 
-        <img src="{{ movie.poster_url }}" alt="Cover for {{ movie.name }}">
-
-        <!-- For deletion -->
-        <form action="{{ url_for('remove_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
-        <button type="submit">Delete</button>
-        </form>
-        <!-- For Update -->
-        <form action="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
+            <!-- For deletion -->
+            <form action="{{ url_for('remove_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
+            <button type="submit">Delete</button>
+            </form>
+            <!-- For Update -->
+            <form action="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
             <input type="text" name="new_title" >
             <button type="submit">Update</button>
-        </form>
-
+            </form>
+            </div>
+            </li>
+        </ol>
         {% endfor %}
     {% endif %}
-     </form>
+     </div>
+    </form>
+
     <!-- Adding a new movie-->
     <form action="{{ url_for('add_movie', user_id=user.id) }}" method="POST">
         <label for="movie">Movie Title:</label>
@@ -41,6 +57,6 @@
         <button type="submit">Add Movie</button>
     </form>
 
-
+    </div>
 </body>
 </html>

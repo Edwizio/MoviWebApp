@@ -40,7 +40,7 @@ def create_user():
 def display_movies(user_id):
     """This function displays the favourite movies of the user based on ID"""
     # Extracting the user object to be used in jinja statements on webpage
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
 
     movies = data_manager.get_movies(user_id)
     return render_template('movies.html', movies=movies,user=user)
@@ -55,7 +55,7 @@ def add_movie(user_id):
 
     data_manager.add_movie(movie, user_id)
     # Extracting the user object to be used in jinja statements on webpage
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
     # and the list of the user's movies to be passed on as arguments to return statement
     movies = user.movies
     flash("Movie Added to the database","success")
@@ -72,7 +72,7 @@ def update_movie(movie_id, user_id):
     data_manager.update_movie(movie_id, new_title)
 
     # Extracting the user object to be used in jinja statements on webpage
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
     # and the list of the user's movies to be passed on as arguments to return statement
     movies = user.movies
 
@@ -87,13 +87,30 @@ def remove_movie(movie_id, user_id):
     data_manager.delete_movie(movie_id)
 
     # Extracting the user object to be used in jinja statements on webpage
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
     # and the list of the user's movies to be passed on as arguments to return statement
     movies = user.movies
 
     flash("Movie Deleted from the database", "success")
     return redirect(url_for('display_movies', user_id=user.id))
 
+# Some common error handling routes defined to make code robust
+@app.errorhandler(404)
+def page_not_found(e):
+    """Handles 404 error as the name dictates"""
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    """Handles 405 error as the name dictates"""
+    return render_template('405.html'), 405
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    """Handles 500 error as the name dictates"""
+    return render_template('500.html'), 500
 
 
 # Creating the database

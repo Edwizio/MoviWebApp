@@ -1,13 +1,124 @@
+
 header{
-    background-color: blue;
+    background-color: rebeccapurple;
     padding: 50px 100px;
     display: flex;
-    align-content: center;
+    align-items: center;
+    justify-content: center;
+    color: azure;
+    font-size: xxx-large;
+
 }
 
 footer{
-    background-color: blue;
+    background-color: rebeccapurple;
     padding: 50px 100px;
     display: flex;
-    align-content: center;
+    align-items: center;
+    justify-content: center;
+    color: azure;
+}
+
+/* Container for flexible layout */
+.user-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+/*
+.user-list{
+    display: flex;
+    flex-direction: row;
+}
+
+.user-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    height: 300px;
+    width: 200px;
+    background: white;
+    border: 1px solid;
+
+    border-radius: 8px;
+    padding: 16px;
+
+    margin: 12px;
+}
+
+
+*/
+
+/* Button styling
+.user-card button {
+
+    display: flex;
+    margin-top: 10px;
+    background: purple;
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+
+}
+*/
+
+body {
+    background: #F5F5F0;
+    color: black;
+    font-family: Monaco;
+}
+
+.list-movies-title {
+    padding: 10px 0;
+    background: peachpuff;
+    color: white;
+    text-align: center;
+    font-size: 16pt;
+}
+
+.movie-grid {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+
+}
+
+.movie-grid li {
+    padding: 10px 15px;
+    text-align: left;
+}
+
+.movie {
+    width: 140px;
+}
+
+.movie-title,
+.movie-year {
+    font-size: 0.8em;
+    text-align: center;
+}
+
+.movie-title {
+    margin-top: 10px;
+}
+
+.movie-year {
+    color: #999;
+}
+
+.movie-director {
+    color: #995;
+}
+.movie-poster {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    width: 250px;
+    height: 400px;
 }

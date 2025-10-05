@@ -42,18 +42,19 @@ class DataManager():
 
             # Creating new Movie object
             new_movie = Movie(
-                name = movie_data['Title'],
-                director = movie_data['Director'],
-                year = int(movie_data['Year']),
-                poster_url = movie_data['Poster'],
-                # Getting the Foreign Key user_id from the webpage
-                user_id = user_id
+                name=movie_data.get("Title"),
+                director=movie_data.get("Director"),
+                year=movie_data.get("Year"),
+                poster_url=movie_data.get("Poster"),
+                user_id=user_id
             )
 
             db.session.add(new_movie)
             db.session.commit()
             return new_movie
-        return None
+        else:
+            print(f"Error : ", response.status_code, response.text)
+            return None
 
     def update_movie(self, movie_id, new_title):
         """This function updates the movie title using the movie ID"""

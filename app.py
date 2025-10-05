@@ -36,6 +36,7 @@ def display_users():
 def create_user():
     """This function add a new user to the database"""
     name = request.form.get("name")
+
     data_manager.create_user(name)
 
     flash("User added successfully", "success")

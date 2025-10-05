@@ -10,7 +10,10 @@
 </head>
 <body>
     <!-- List of users -->
-    <header>CineGold</header>
+    <header>CineGold
+    <img src="/static/images/cinelogo.avif" alt="The website logo" width="100" height="100">
+
+    </header>
 
        <!-- Flash messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -23,7 +26,8 @@
     {% endif %}
     {% endwith %}
     <h1 class="user-heading">Our Cinema Lovers</h1>
-
+    <p>Since it's inception in 1895, cinema has managed to captivate billions of people around the world!</p>
+    <p>This little Web App is our way of paying tribute to it's inventors the Lumière Brothers!</p>
         <ul class="user-list">
         {% for user in users %}
          <li class="user-card">

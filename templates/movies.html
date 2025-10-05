@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 
     <title>Movies</title>
 
@@ -12,51 +13,83 @@
 
 </head>
 <body>
+
     <header>Jewels of Cinema</header>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class="flashes" id="flash-messages">
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <!-- The movies grid -->
     <div class="list-movies-title">
      <a href="{{ url_for('display_users') }}">⬅ Back to Users</a>
 
     <form action="{{ url_for('display_movies', user_id=user.id) }}" method="GET">
-     <div class="list-movies-title">
+
         <h1> Movies for {{user.name}}</h1>
      <!-- Movie Section -->
+     <ol class="movie-grid">
      {% if movies %}
-        {% for movie in movies %}
-        <ol class="movie-grid">
-            <li>
-            <div class="movie">
-            <h3 class="movie-title">{{ movie.name }}</h3>
-            <p class="movie-director">Director: {{ movie.director or 'N/A' }}</p>
-            <p class="movie-year">Year: {{ movie.year or 'N/A' }}</p>
+     {% for movie in movies %}
+          <li>
+          <div class="movie">
+          <h3 class="movie-title">{{ movie.name }}</h3>
+          <p class="movie-director">Director: {{ movie.director or 'N/A' }}</p>
+          <p class="movie-year">Year: {{ movie.year or 'N/A' }}</p>
 
-            <img class="movie-poster" src="{{ movie.poster_url }}" alt="Cover for {{ movie.name }}">
+          <img class="movie-poster" src="{{ movie.poster_url }}" alt="Cover for {{ movie.name }}">
 
-            <!-- For deletion -->
-            <form action="{{ url_for('remove_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
+          <!-- For deletion -->
+          <form action="{{ url_for('remove_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
             <button type="submit">Delete</button>
-            </form>
-            <!-- For Update -->
-            <form action="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
+          </form>
+          <!-- For Update -->
+          <form action="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
             <input type="text" name="new_title" >
             <button type="submit">Update</button>
-            </form>
-            </div>
-            </li>
-        </ol>
+          </form>
+          </div>
+          </li>
+
+
         {% endfor %}
-    {% endif %}
-     </div>
+        {% endif %}
+         </ol>
+
+
     </form>
 
     <!-- Adding a new movie-->
     <form action="{{ url_for('add_movie', user_id=user.id) }}" method="POST">
-        <label for="movie">Movie Title:</label>
+        <label for="movie">Movie Title :</label>
         <input type="text" id="movie" name="movie" required><br><br>
-        <label for="year">Year:</label>
+        <label for="year">Year(optional) :</label>
         <input type="text" id="year" name="year"><br><br>
         <button type="submit">Add Movie</button>
     </form>
-
     </div>
+    <footer>© 2025 MovieApp. All rights reserved.</footer>
+
+<script>
+  // Auto-hide flash messages after 4 seconds
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const flashContainer = document.getElementById('flash-messages');
+    if (flashContainer) {
+        // Start fade out after 10 seconds
+      setTimeout(() => {
+        flashContainer.style.opacity = '0';
+        // Completely remove from layout after transition (1s)
+        setTimeout(() => flashContainer.style.display = 'none', 1000);
+      }, 10000); // 10000ms = 10 seconds
+    }
+  });
+</script>
+
 </body>
 </html>

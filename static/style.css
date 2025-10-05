@@ -3,6 +3,7 @@ header{
     background-color: rebeccapurple;
     padding: 50px 100px;
     display: flex;
+    width: 100%;
     align-items: center;
     justify-content: center;
     color: azure;
@@ -14,19 +15,12 @@ footer{
     background-color: rebeccapurple;
     padding: 50px 100px;
     display: flex;
+    width: 100%;
     align-items: center;
     justify-content: center;
     color: azure;
 }
 
-/* Container for flexible layout */
-.user-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
-}
 
 /*
 .user-list{
@@ -68,17 +62,22 @@ footer{
 */
 
 body {
+    display: flex;
+    flex-wrap: wrap;
     background: #F5F5F0;
     color: black;
     font-family: Monaco;
+    width: 100%;
+
 }
 
 .list-movies-title {
     padding: 10px 0;
-    background: peachpuff;
+    background: black;
     color: white;
     text-align: center;
     font-size: 16pt;
+    width: 100%;
 }
 
 .movie-grid {
@@ -87,8 +86,11 @@ body {
     margin: 0;
     margin-top: 20px;
     display: flex;
-    justify-content: center;
-
+    flex-direction: row;
+    justify-content: center;    /* center the items horizontally */
+    flex-wrap: wrap;            /* allows items to wrap to the next line */
+    gap: 20px;                  /* space between movie cards */
+    max-width: 1200px;          /* keeps content nicely centered */
 }
 
 .movie-grid li {
@@ -97,7 +99,15 @@ body {
 }
 
 .movie {
-    width: 140px;
+    background-color: black;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;                 /* fixed width for each card */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .movie-title,
@@ -118,7 +128,38 @@ body {
     color: #995;
 }
 .movie-poster {
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    width: 250px;
-    height: 400px;
+    width: 200px;
+    height: 300px;
+    object-fit: cover;            /* ensures all images are uniform */
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.flashes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    width: 100%;
+}
+
+.flashes li {
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.flashes li.success {
+    background-color: black;
+    color: green;
+}
+
+.flashes li.error {
+    background-color: black;
+    color: red;
 }

@@ -1,4 +1,6 @@
 from flask import Flask, request, render_template, url_for, redirect, flash
+from pyexpat.errors import messages
+
 from data_manager import DataManager
 from models import db, Movie, User
 import os
@@ -21,6 +23,11 @@ data_manager = DataManager() # Create an object of your DataManager class
 def display_users():
     """This functions displays the list of users and a form to add new user"""
     users = data_manager.get_users()
+    if not users:
+        flash("Please add some users", "error")
+
+        return render_template('index.html', users=users, messages=messages)
+
     return render_template('index.html', users=users)
 
 
@@ -50,15 +57,28 @@ def display_movies(user_id):
 @app.route('/users/<int:user_id>/movies', methods=['POST'])
 def add_movie(user_id):
     """This method adds a movie to a user's list based on ID"""
+
     # Getting the title from the webpage
     movie = request.form.get('movie')
+    user_year = request.form.get('year')  # Optional field
 
-    data_manager.add_movie(movie, user_id)
+    # Error handling if movie title is not entered
+    if not movie:
+        flash("Please enter a movie name.", "error")
+        return redirect(url_for('display_movies', user_id=user_id))
+
+    success, message = data_manager.add_movie(movie, user_id, user_year)
+    # Flash the message with category
+    if success:
+        flash(message, "success")
+    else:
+        flash(message, "error")
+
     # Extracting the user object to be used in jinja statements on webpage
     user = db.session.get(User, user_id)
     # and the list of the user's movies to be passed on as arguments to return statement
     movies = user.movies
-    flash("Movie Added to the database","success")
+    #flash("Movie Added to the database","success")
     return redirect(url_for('display_movies',user_id=user.id))
 
 

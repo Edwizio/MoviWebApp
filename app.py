@@ -39,7 +39,7 @@ def create_user():
     data_manager.create_user(name)
 
     flash("User added successfully", "success")
-    return redirect(url_for('display_users '))
+    return redirect(url_for('display_users'))
 
 
 # Creating route and method to display user's list of favourite movies

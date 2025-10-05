@@ -9,11 +9,20 @@
 
 </head>
 <body>
-    {% extends "base.html" %}
-    {% block content %}
     <!-- List of users -->
     <header>CineGold</header>
-    <h1>Users</h1>
+
+       <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class="flashes" id="flash-messages">
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <h1 class="user-heading">Our Cinema Lovers</h1>
 
         <ul class="user-list">
         {% for user in users %}
@@ -21,38 +30,38 @@
             <a href="{{ url_for('display_users') }}" class="btn"></a>
             <span>{{ user.name }}</span>
             <!-- Button that links to the movies page for this user -->
-            <div class="display-button">
+
              <form action="{{ url_for('display_movies', user_id=user.id) }}" method="get">
                 <button type="submit">View Movies</button>
             </form>
-            </div>
+
          </li>
         {% endfor %}
         </ul>
     <!-- Add new user -->
+    <div class="user-add">
     <form action="{{ url_for('create_user') }}" method="post">
         <label for="name">New User:</label>
         <input type="text" id="name" name="name" required><br><br>
         <button type="submit">Add User</button>
     </form>
-    <!-- displaying the success msg -->
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        <ul>
-            <li>
-            {% if category == 'error' %}
-            <span style="color:red; font-weight:bold;">{{ message }}</span>
-            {% else %}
-            <span style="color:green; font-weight:bold;">{{ message }}</span>
-            {% endif %}
-            </li>
-        </ul>
-    {% endif %}
-    {% endwith %}
-    {% endblock %}
-
-
+    </div>
     <footer>© 2025 MovieApp. All rights reserved.</footer>
+
+
+    <script>
+  // Auto-hide flash messages after 4 seconds
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const flashContainer = document.getElementById('flash-messages');
+    if (flashContainer) {
+        // Start fade out after 10 seconds
+      setTimeout(() => {
+        flashContainer.style.opacity = '0';
+        // Completely remove from layout after transition (1s)
+        setTimeout(() => flashContainer.style.display = 'none', 1000);
+      }, 10000); // 10000ms = 10 seconds
+    }
+  });
+    </script>
 </body>
 </html>

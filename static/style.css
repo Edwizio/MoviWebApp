@@ -21,47 +21,59 @@ footer{
     color: azure;
 }
 
+.user-heading{
+    background-color: black;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    color: silver;
+    width: 100%;
 
-/*
+}
+
+
 .user-list{
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px 0;
+    background: black;
+    color: white;
+    text-align: center;
+    font-size: 16pt;
+    width: 100%;
 }
 
 .user-card {
+    background-color: black;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;                 /* fixed width for each card */
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-    height: 300px;
-    width: 200px;
-    background: white;
-    border: 1px solid;
-
-    border-radius: 8px;
-    padding: 16px;
-
-    margin: 12px;
+    align-items: center;
+    text-align: center;
 }
 
 
-*/
 
-/* Button styling
-.user-card button {
+.user-add {
+    background-color: black;
 
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;                 /* fixed width for each card */
     display: flex;
-    margin-top: 10px;
-    background: purple;
-    border: none;
-    color: white;
-    padding: 10px 16px;
-    border-radius: 8px;
+    height: 20%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 
 }
-*/
 
-body {
+
+body, html {
     display: flex;
     flex-wrap: wrap;
     background: #F5F5F0;

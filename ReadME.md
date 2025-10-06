@@ -3,6 +3,8 @@
 **MoviWebApp** is a Flask-based web application that allows users to create and manage personal movie lists.  
 Each user can add, view, and organize their favorite movies — with automatic data fetching from the **OMDb API** and robust error handling.
 
+
+🌐 **Live Website:** [MoviWebApp on PythonAnywhere](https://edwizio.pythonanywhere.com/)
 ---
 
 ## 🚀 Features
@@ -68,7 +70,7 @@ Each user can add, view, and organize their favorite movies — with automatic d
 Access the app in your browser:
 👉 http://127.0.0.1:5000/
     
-📂 Project Structure
+##📂 Project Structure
 
 MoviWebApp/
 │

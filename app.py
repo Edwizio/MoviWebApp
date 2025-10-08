@@ -104,8 +104,8 @@ def update_movie(movie_id, user_id):
 
     # Getting the new title from the webpage
     new_title = request.form.get('new_title')
-    # Validating for empty string
-    if not new_title:
+    # Validating for empty string and whitespaces
+    if not new_title.strip():
         flash("You have entered an empty string","error")
         return redirect(url_for('display_movies', user_id=user.id))
 

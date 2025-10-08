@@ -28,8 +28,7 @@ def display_users():
     """for user in users:
         print(user.name)
         print(user.password)"""
-    u = User.query.filter_by(name="Madiha").first()
-    print(check_password_hash(u.password, "zoya"))
+
     if not users:
         flash("Please add some users", "error")
 

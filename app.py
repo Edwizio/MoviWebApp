@@ -97,14 +97,19 @@ def add_movie(user_id):
 def update_movie(movie_id, user_id):
     """This method updates the title of a movie based on it's ID"""
 
-    # Getting the new title from the webpage
-    new_title = request.form.get('new_title')
-    data_manager.update_movie(movie_id, new_title)
-
     # Extracting the user object to be used in jinja statements on webpage
     user = db.session.get(User, user_id)
     # and the list of the user's movies to be passed on as arguments to return statement
     movies = user.movies
+
+    # Getting the new title from the webpage
+    new_title = request.form.get('new_title')
+    # Validating for empty string
+    if not new_title:
+        flash("You have entered an empty string","error")
+        return redirect(url_for('display_movies', user_id=user.id))
+
+    data_manager.update_movie(movie_id, new_title)
 
     flash("Movie Title updated in the database", "success")
     return redirect(url_for('display_movies', user_id=user.id))

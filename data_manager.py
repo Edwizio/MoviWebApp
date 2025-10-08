@@ -1,3 +1,4 @@
+from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash
 
 from models import db, User, Movie
@@ -19,8 +20,14 @@ class DataManager():
         new_user = User(name=name, password=password_hw)
 
         db.session.add(new_user)
-        db.session.commit()
-        return new_user
+        # Using db.session.rollback() with try-except to avoid crashing if database error occurs
+        try:
+            db.session.commit()
+            return new_user
+        except SQLAlchemyError:
+            db.session.rollback()
+            return None
+
 
     def get_users(self):
         """This function returns a list of the existing users"""
@@ -68,8 +75,13 @@ class DataManager():
                 )
 
             db.session.add(new_movie)
-            db.session.commit()
-            return True, f"Movie '{movie}' added successfully!"
+            # Using db.session.rollback() with try-except to avoid crashing if database error occurs
+            try:
+                db.session.commit()
+                return True, f"Movie '{movie}' added successfully!"
+            except SQLAlchemyError:
+                db.session.rollback()
+                return False, f"Database Error"
         else:
             return False, f"Error : {response.status_code, response.text}"
 
@@ -82,9 +94,13 @@ class DataManager():
 
         # Updating the title
         movie.name = new_title
-        db.session.commit()
-        return movie
-
+        # Using db.session.rollback() with try-except to avoid crashing if database error occurs
+        try:
+            db.session.commit()
+            return movie
+        except SQLAlchemyError:
+            db.session.rollback()
+            return None
 
     def delete_movie(self, movie_id):
         """This function deletes a movie based on it's ID"""
@@ -94,6 +110,14 @@ class DataManager():
 
         # Deleting the movie from the database
         db.session.delete(movie)
-        db.session.commit()
-        return movie
+        # Using db.session.rollback() with try-except to avoid crashing if database error occurs
+        try:
+            db.session.commit()
+            return movie
+        except SQLAlchemyError:
+            db.session.rollback()
+            return None
+
+
+
 

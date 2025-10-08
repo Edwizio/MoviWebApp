@@ -9,7 +9,9 @@ import os
 
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey" # to display flash messages
+
+# Using environment variables for secret_key
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-key-only')
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))

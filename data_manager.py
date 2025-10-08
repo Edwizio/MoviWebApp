@@ -1,4 +1,4 @@
-from flask import request
+from werkzeug.security import generate_password_hash
 
 from models import db, User, Movie
 import requests
@@ -10,9 +10,14 @@ API_KEY = os.getenv('API_KEY')
 
 class DataManager():
     # Define Crud operations as methods
-    def create_user(self, name):
+    def create_user(self, name, password):
         """This method creates a new user"""
-        new_user = User(name=name)
+
+        # Hashing the password
+        password_hw = generate_password_hash(password)
+
+        new_user = User(name=name, password=password_hw)
+
         db.session.add(new_user)
         db.session.commit()
         return new_user

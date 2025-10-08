@@ -1,6 +1,8 @@
 from flask import Flask, request, render_template, url_for, redirect, flash
 from pyexpat.errors import messages
 
+from werkzeug.security import check_password_hash
+
 from data_manager import DataManager
 from models import db, Movie, User
 import os
@@ -23,6 +25,11 @@ data_manager = DataManager() # Create an object of your DataManager class
 def display_users():
     """This functions displays the list of users and a form to add new user"""
     users = data_manager.get_users()
+    """for user in users:
+        print(user.name)
+        print(user.password)"""
+    u = User.query.filter_by(name="Madiha").first()
+    print(check_password_hash(u.password, "zoya"))
     if not users:
         flash("Please add some users", "error")
 
@@ -36,8 +43,9 @@ def display_users():
 def create_user():
     """This function add a new user to the database"""
     name = request.form.get("name")
+    password = request.form.get("password")
 
-    data_manager.create_user(name)
+    data_manager.create_user(name, password)
 
     flash("User added successfully", "success")
     return redirect(url_for('display_users'))
@@ -105,15 +113,23 @@ def update_movie(movie_id, user_id):
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/delete', methods=['POST'])
 def remove_movie(movie_id, user_id):
     """This method removes a movie from a user's list"""
-    data_manager.delete_movie(movie_id)
 
     # Extracting the user object to be used in jinja statements on webpage
     user = db.session.get(User, user_id)
+
     # and the list of the user's movies to be passed on as arguments to return statement
     movies = user.movies
 
-    flash("Movie Deleted from the database", "success")
+    # Getting the password to check before deleting the movie
+    password = request.form.get('password')
+    if not check_password_hash(user.password, password):
+        flash("Incorrect password. Movie not deleted.", "error")
+        return redirect(url_for('display_movies', user_id=user.id))
+
+    data_manager.delete_movie(movie_id)
+    flash("Movie deleted successfully!", "success")
     return redirect(url_for('display_movies', user_id=user.id))
+
 
 # Some common error handling routes defined to make code robust
 @app.errorhandler(404)
@@ -136,8 +152,8 @@ def internal_server_error(e):
 
 # Creating the database
 if __name__ == '__main__':
-    """  with app.app_context():
-    db.create_all()"""
+    """with app.app_context():
+        db.create_all()"""
 
     app.run(host='0.0.0.0', debug=True, port=5000)
 

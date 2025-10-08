@@ -64,6 +64,7 @@ footer{
 
 .user-add {
     background-color: black;
+    color: white;
 
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
     width: 100%;                 /* fixed width for each card */

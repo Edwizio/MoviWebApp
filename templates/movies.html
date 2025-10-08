@@ -48,9 +48,11 @@
           <img class="movie-poster" src="{{ movie.poster_url }}" alt="Cover for {{ movie.name }}">
 
           <!-- For deletion -->
-          <form action="{{ url_for('remove_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
-            <button type="submit">Delete</button>
+          <form id="deleteForm-{{ movie.id }}" action="{{ url_for('remove_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
+                <input type="hidden" name="password" id="passwordInput-{{ movie.id }}">
+                <button type="button" onclick="confirmDelete('{{ movie.id }}')">Delete</button>
           </form>
+
           <!-- For Update -->
           <form action="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
             <input type="text" name="new_title" >
@@ -93,5 +95,22 @@
   });
 </script>
 
+<!-- Java Script for deletion -->
+<script>
+function confirmDelete(movieId) {
+    const password = prompt("Please enter your password to confirm deletion:");
+
+    if (password) {
+        const input = document.getElementById(`passwordInput-${movieId}`);
+        input.value = password;
+
+        const form = document.getElementById(`deleteForm-${movieId}`);
+        form.submit();
+    } else {
+        alert("Deletion canceled.");
+    }
+}
+
+</script>
 </body>
 </html>

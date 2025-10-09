@@ -49,15 +49,15 @@
 
           <!-- For deletion -->
           <form id="deleteForm-{{ movie.id }}" action="{{ url_for('remove_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
-                <input type="hidden" name="password" id="deletePassword-{{ movie.id }}">
-                <button type="button" onclick="confirmDelete('{{ movie.id }}')">Delete</button>
+
+                <button type="button" onclick="openPasswordModal('delete', '{{ movie.id }}')">Delete</button>
           </form>
 
           <!-- For Update -->
           <form id="updateForm-{{ movie.id }}" action="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
                 <input type="text" name="new_title" >
-                <input type="hidden" name="password" id="updatePassword-{{ movie.id }}">
-                <button type="button" onclick="confirmUpdate('{{ movie.id }}')">Update</button>
+
+                <button type="button" onclick="openPasswordModal('update', '{{ movie.id }}')">Update</button>
           </form>
           </div>
           </li>
@@ -96,41 +96,76 @@
   });
 </script>
 
-<!-- Java Script for deletion -->
+<!-- Password Modal -->
+<div id="passwordModal" style="
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background-color:rgba(0,0,0,0.5);
+  justify-content:center;
+  align-items:center;
+">
+  <div style="
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+    width:300px;
+  ">
+    <h3 id="modalTitle">Enter Password</h3>
+    <input type="password" id="modalPassword" placeholder="Enter password" style="
+      width:90%;
+      padding:8px;
+      margin:10px 0;
+    ">
+    <div style="display:flex; justify-content:center; gap:10px;">
+      <button onclick="submitPassword()">OK</button>
+      <button onclick="cancelPassword()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for deletion and update -->
+
 <script>
-function confirmDelete(movieId) {
-    const password = prompt("Please enter your password to confirm deletion:");
+let currentAction = null; // Will hold what to do (delete/update)
+let currentMovieId = null;
 
-    if (password) {
-        const input = document.getElementById(`deletePassword-${movieId}`);
-        input.value = password;
-
-        const form = document.getElementById(`deleteForm-${movieId}`);
-        form.submit();
-    } else {
-        alert("Deletion canceled.");
-    }
+function openPasswordModal(action, movieId) {
+    currentAction = action;
+    currentMovieId = movieId;
+    document.getElementById('modalTitle').textContent =
+        action === 'delete' ? 'Confirm Deletion' : 'Confirm Update';
+    document.getElementById('modalPassword').value = '';
+    document.getElementById('passwordModal').style.display = 'flex';
 }
 
-</script>
-
-<!-- Java Script for Update -->
-<script>
-function confirmUpdate(movieId) {
-    const password = prompt("Please enter your password to confirm update:");
-
-    if (password) {
-        const input = document.getElementById(`updatePassword-${movieId}`);
-        input.value = password;
-
-        const form = document.getElementById(`updateForm-${movieId}`);
-        form.submit();
-    } else {
-        alert("Update canceled.");
+function submitPassword() {
+    const password = document.getElementById('modalPassword').value;
+    if (!password) {
+        alert("Password cannot be empty!");
+        return;
     }
+
+    const inputId = currentAction === 'delete'
+        ? `deletePassword-${currentMovieId}`
+        : `updatePassword-${currentMovieId}`;
+    const formId = currentAction === 'delete'
+        ? `deleteForm-${currentMovieId}`
+        : `updateForm-${currentMovieId}`;
+
+    document.getElementById(inputId).value = password;
+    document.getElementById(formId).submit();
+    document.getElementById('passwordModal').style.display = 'none';
 }
 
+function cancelPassword() {
+    document.getElementById('passwordModal').style.display = 'none';
+    alert(currentAction === 'delete' ? 'Deletion canceled.' : 'Update canceled.');
+}
 </script>
+
 
 </body>
 </html>

@@ -49,14 +49,15 @@
 
           <!-- For deletion -->
           <form id="deleteForm-{{ movie.id }}" action="{{ url_for('remove_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
-                <input type="hidden" name="password" id="passwordInput-{{ movie.id }}">
+                <input type="hidden" name="password" id="deletePassword-{{ movie.id }}">
                 <button type="button" onclick="confirmDelete('{{ movie.id }}')">Delete</button>
           </form>
 
           <!-- For Update -->
-          <form action="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
-            <input type="text" name="new_title" >
-            <button type="submit">Update</button>
+          <form id="updateForm-{{ movie.id }}" action="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
+                <input type="text" name="new_title" >
+                <input type="hidden" name="password" id="updatePassword-{{ movie.id }}">
+                <button type="button" onclick="confirmUpdate('{{ movie.id }}')">Update</button>
           </form>
           </div>
           </li>
@@ -64,7 +65,7 @@
 
         {% endfor %}
         {% endif %}
-         </ol>
+     </ol>
 
 
     </form>
@@ -101,7 +102,7 @@ function confirmDelete(movieId) {
     const password = prompt("Please enter your password to confirm deletion:");
 
     if (password) {
-        const input = document.getElementById(`passwordInput-${movieId}`);
+        const input = document.getElementById(`deletePassword-${movieId}`);
         input.value = password;
 
         const form = document.getElementById(`deleteForm-${movieId}`);
@@ -112,5 +113,24 @@ function confirmDelete(movieId) {
 }
 
 </script>
+
+<!-- Java Script for Update -->
+<script>
+function confirmUpdate(movieId) {
+    const password = prompt("Please enter your password to confirm update:");
+
+    if (password) {
+        const input = document.getElementById(`updatePassword-${movieId}`);
+        input.value = password;
+
+        const form = document.getElementById(`updateForm-${movieId}`);
+        form.submit();
+    } else {
+        alert("Update canceled.");
+    }
+}
+
+</script>
+
 </body>
 </html>

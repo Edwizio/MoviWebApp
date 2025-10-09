@@ -109,6 +109,12 @@ def update_movie(movie_id, user_id):
         flash("You have entered an empty string","error")
         return redirect(url_for('display_movies', user_id=user.id))
 
+    # Getting the password to check before deleting the movie
+    password = request.form.get('password')
+    if not check_password_hash(user.password, password):
+        flash("Incorrect password. Movie not updated.", "error")
+        return redirect(url_for('display_movies', user_id=user.id))
+
     data_manager.update_movie(movie_id, new_title)
 
     flash("Movie Title updated in the database", "success")
@@ -122,9 +128,6 @@ def remove_movie(movie_id, user_id):
 
     # Extracting the user object to be used in jinja statements on webpage
     user = db.session.get(User, user_id)
-
-    # and the list of the user's movies to be passed on as arguments to return statement
-    movies = user.movies
 
     # Getting the password to check before deleting the movie
     password = request.form.get('password')

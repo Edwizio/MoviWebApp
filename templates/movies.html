@@ -3,97 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-    <title>Movies</title>
+    <title>Jewels of Cinema</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
-
-
 </head>
 <body>
 
-    <header>Jewels of Cinema
-    <img src="/static/images/userlogo.jpg" alt="The website logo" width="150" height="100">
-    </header>
+<header>
+    Jewels of Cinema
+    <img src="/static/images/userlogo.jpg" alt="Website logo" width="150" height="100">
+</header>
 
-    <!-- Flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
+<!-- Flash messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
     <ul class="flashes" id="flash-messages">
       {% for category, message in messages %}
         <li class="{{ category }}">{{ message }}</li>
       {% endfor %}
     </ul>
-    {% endif %}
-    {% endwith %}
-    <!-- The movies grid -->
-    <div class="list-movies-title">
-     <a href="{{ url_for('display_users') }}">⬅ Back to Users</a>
+  {% endif %}
+{% endwith %}
 
-    <form action="{{ url_for('display_movies', user_id=user.id) }}" method="GET">
+<div class="list-movies-title">
+  <a href="{{ url_for('display_users') }}">⬅ Back to Users</a>
+  <h1>Movies for {{ user.name }}</h1>
 
-        <h1> Movies for {{user.name}}</h1>
-     <!-- Movie Section -->
-     <ol class="movie-grid">
-     {% if movies %}
-     {% for movie in movies %}
-          <li>
-          <div class="movie">
+  <!-- Movies Grid -->
+  <ol class="movie-grid">
+    {% if movies %}
+      {% for movie in movies %}
+      <li>
+        <div class="movie">
           <h3 class="movie-title">{{ movie.name }}</h3>
           <p class="movie-director">Director: {{ movie.director or 'N/A' }}</p>
           <p class="movie-year">Year: {{ movie.year or 'N/A' }}</p>
 
           <img class="movie-poster" src="{{ movie.poster_url }}" alt="Cover for {{ movie.name }}">
 
-          <!-- For deletion -->
-          <form id="deleteForm-{{ movie.id }}" action="{{ url_for('remove_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
-
-                <button type="button" onclick="openPasswordModal('delete', '{{ movie.id }}')">Delete</button>
+          <!-- Delete Form -->
+          <form id="deleteForm-{{ movie.id }}"
+                action="{{ url_for('remove_movie', movie_id=movie.id, user_id=user.id) }}"
+                method="POST">
+              <input type="hidden" name="password" id="deletePassword-{{ movie.id }}">
+              <button type="button" onclick="openPasswordModal('delete', '{{ movie.id }}')">Delete</button>
           </form>
 
-          <!-- For Update -->
-          <form id="updateForm-{{ movie.id }}" action="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}" method="POST">
-                <input type="text" name="new_title" >
-
-                <button type="button" onclick="openPasswordModal('update', '{{ movie.id }}')">Update</button>
+          <!-- Update Form -->
+          <form id="updateForm-{{ movie.id }}"
+                action="{{ url_for('update_movie', movie_id=movie.id, user_id=user.id) }}"
+                method="POST">
+              <input type="text" name="new_title" placeholder="New title">
+              <input type="hidden" name="password" id="updatePassword-{{ movie.id }}">
+              <button type="button" onclick="openPasswordModal('update', '{{ movie.id }}')">Update</button>
           </form>
-          </div>
-          </li>
+        </div>
+      </li>
+      {% endfor %}
+    {% else %}
+      <p>No movies added yet.</p>
+    {% endif %}
+  </ol>
 
+  <!-- Add New Movie -->
+  <form action="{{ url_for('add_movie', user_id=user.id) }}" method="POST" class="add-movie-form">
+    <label for="movie">Movie Title:</label>
+    <input type="text" id="movie" name="movie" required><br><br>
 
-        {% endfor %}
-        {% endif %}
-     </ol>
+    <label for="year">Year (optional):</label>
+    <input type="text" id="year" name="year"><br><br>
 
+    <button type="submit">Add Movie</button>
+  </form>
+</div>
 
-    </form>
+<footer>© 2025 MovieApp. All rights reserved.</footer>
 
-    <!-- Adding a new movie-->
-    <form action="{{ url_for('add_movie', user_id=user.id) }}" method="POST">
-        <label for="movie">Movie Title :</label>
-        <input type="text" id="movie" name="movie" required><br><br>
-        <label for="year">Year(optional) :</label>
-        <input type="text" id="year" name="year"><br><br>
-        <button type="submit">Add Movie</button>
-    </form>
-    </div>
-    <footer>© 2025 MovieApp. All rights reserved.</footer>
-
+<!-- Flash Auto-hide -->
 <script>
-  // Auto-hide flash messages after 10 seconds
-  window.addEventListener('DOMContentLoaded', (event) => {
-    const flashContainer = document.getElementById('flash-messages');
-    if (flashContainer) {
-        // Start fade out after 10 seconds
-      setTimeout(() => {
-        flashContainer.style.opacity = '0';
-        // Completely remove from layout after transition (1s)
-        setTimeout(() => flashContainer.style.display = 'none', 1000);
-      }, 10000); // 10000ms = 10 seconds
-    }
-  });
+window.addEventListener('DOMContentLoaded', () => {
+  const flashContainer = document.getElementById('flash-messages');
+  if (flashContainer) {
+    setTimeout(() => {
+      flashContainer.style.opacity = '0';
+      setTimeout(() => flashContainer.style.display = 'none', 1000);
+    }, 10000);
+  }
+});
 </script>
 
 <!-- Password Modal -->
@@ -126,46 +123,43 @@
   </div>
 </div>
 
-<!-- JavaScript for deletion and update -->
-
+<!-- JavaScript for Modal Actions -->
 <script>
-let currentAction = null; // Will hold what to do (delete/update)
+let currentAction = null;
 let currentMovieId = null;
 
 function openPasswordModal(action, movieId) {
-    currentAction = action;
-    currentMovieId = movieId;
-    document.getElementById('modalTitle').textContent =
-        action === 'delete' ? 'Confirm Deletion' : 'Confirm Update';
-    document.getElementById('modalPassword').value = '';
-    document.getElementById('passwordModal').style.display = 'flex';
+  currentAction = action;
+  currentMovieId = movieId;
+  document.getElementById('modalTitle').textContent =
+      action === 'delete' ? 'Confirm Deletion' : 'Confirm Update';
+  document.getElementById('modalPassword').value = '';
+  document.getElementById('passwordModal').style.display = 'flex';
 }
 
 function submitPassword() {
-    const password = document.getElementById('modalPassword').value;
-    if (!password) {
-        alert("Password cannot be empty!");
-        return;
-    }
+  const password = document.getElementById('modalPassword').value;
+  if (!password.trim()) {
+    alert("Password cannot be empty!");
+    return;
+  }
 
-    const inputId = currentAction === 'delete'
-        ? `deletePassword-${currentMovieId}`
-        : `updatePassword-${currentMovieId}`;
-    const formId = currentAction === 'delete'
-        ? `deleteForm-${currentMovieId}`
-        : `updateForm-${currentMovieId}`;
+  const inputId = currentAction === 'delete'
+      ? `deletePassword-${currentMovieId}`
+      : `updatePassword-${currentMovieId}`;
+  const formId = currentAction === 'delete'
+      ? `deleteForm-${currentMovieId}`
+      : `updateForm-${currentMovieId}`;
 
-    document.getElementById(inputId).value = password;
-    document.getElementById(formId).submit();
-    document.getElementById('passwordModal').style.display = 'none';
+  document.getElementById(inputId).value = password;
+  document.getElementById(formId).submit();
+  document.getElementById('passwordModal').style.display = 'none';
 }
 
 function cancelPassword() {
-    document.getElementById('passwordModal').style.display = 'none';
-    alert(currentAction === 'delete' ? 'Deletion canceled.' : 'Update canceled.');
+  document.getElementById('passwordModal').style.display = 'none';
 }
 </script>
-
 
 </body>
 </html>

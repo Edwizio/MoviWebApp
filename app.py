@@ -27,9 +27,6 @@ data_manager = DataManager() # Create an object of your DataManager class
 def display_users():
     """This functions displays the list of users and a form to add new user"""
     users = data_manager.get_users()
-    """for user in users:
-        print(user.name)
-        print(user.password)"""
 
     if not users:
         flash("Please add some users", "error")
@@ -95,30 +92,37 @@ def add_movie(user_id):
 # Creating a route and method to modify the title of a specific movie in a user’s list
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/update', methods=['POST'])
 def update_movie(movie_id, user_id):
-    """This method updates the title of a movie based on it's ID"""
+    """This method updates the title of a movie based on it's ID and verifying if it belongs to the relevant user who is
+    trying to update it."""
 
     # Extracting the user object to be used in jinja statements on webpage
     user = db.session.get(User, user_id)
     # and the list of the user's movies to be passed on as arguments to return statement
     movies = user.movies
+    # Extracting the Movie Object
+    movie = Movie.query.get(movie_id)
 
-    # Getting the new title from the webpage
-    new_title = request.form.get('new_title')
-    # Validating for empty string and whitespaces
-    if not new_title.strip():
-        flash("You have entered an empty string","error")
+    if movie.id == user_id: # Verifying that the relevant User is updating the movie
+        # Getting the new title from the webpage
+        new_title = request.form.get('new_title')
+        # Validating for empty string and whitespaces
+        if not new_title.strip():
+            flash("You have entered an empty string","error")
+            return redirect(url_for('display_movies', user_id=user.id))
+
+        # Getting the password to check before deleting the movie
+        password = request.form.get('password')
+        if not check_password_hash(user.password, password):
+            flash("Incorrect password. Movie not updated.", "error")
+            return redirect(url_for('display_movies', user_id=user.id))
+
+        data_manager.update_movie(movie_id, new_title)
+
+        flash("Movie Title updated in the database", "success")
         return redirect(url_for('display_movies', user_id=user.id))
-
-    # Getting the password to check before deleting the movie
-    password = request.form.get('password')
-    if not check_password_hash(user.password, password):
-        flash("Incorrect password. Movie not updated.", "error")
+    else:
+        flash("Only the owner of the database can update the movie", "error")
         return redirect(url_for('display_movies', user_id=user.id))
-
-    data_manager.update_movie(movie_id, new_title)
-
-    flash("Movie Title updated in the database", "success")
-    return redirect(url_for('display_movies', user_id=user.id))
 
 
 # Creating a route and method to remove a specific movie from a user’s favorite movie list
@@ -128,6 +132,13 @@ def remove_movie(movie_id, user_id):
 
     # Extracting the user object to be used in jinja statements on webpage
     user = db.session.get(User, user_id)
+
+    movie = Movie.query.get(movie_id)
+
+    if movie.id != user_id: # Verifying that the relevant user is performing the deletion
+        flash("Only the owner of the database can delete the movie", "error")
+        return redirect(url_for('display_movies', user_id=user.id))
+
 
     # Getting the password to check before deleting the movie
     password = request.form.get('password')

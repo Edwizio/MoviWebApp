@@ -135,7 +135,7 @@ def remove_movie(movie_id, user_id):
 
     movie = Movie.query.get(movie_id)
 
-    if movie.id != user_id: # Verifying that the relevant user is performing the deletion
+    if movie.user_id != user_id: # Verifying that the relevant user is performing the deletion
         flash("Only the owner of the database can delete the movie", "error")
         return redirect(url_for('display_movies', user_id=user.id))
 

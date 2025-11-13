@@ -9,7 +9,7 @@ class User(db.Model):
 
     # Adding the Python side relationship to Movie class to connect the two classes in both directions, without this,
     # the database will still work but only half of the links exist
-    movies = db.relationship("Movie", back_populates="owner", cascade="all, delete-orphan")
+    movies = db.relationship("Movie", back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"User(id = {self.id}, name = {self.name})"

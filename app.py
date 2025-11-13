@@ -102,7 +102,7 @@ def update_movie(movie_id, user_id):
     # Extracting the Movie Object
     movie = Movie.query.get(movie_id)
 
-    if movie.id == user_id: # Verifying that the relevant User is updating the movie
+    if movie.user_id == user_id: # Verifying that the relevant User is updating the movie
         # Getting the new title from the webpage
         new_title = request.form.get('new_title')
         # Validating for empty string and whitespaces
